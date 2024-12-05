@@ -1,4 +1,5 @@
 {
   "name": "aoc2024",
-  "packageManager": "yarn@4.4.1"
+  "packageManager": "yarn@4.4.1",
+  "type": "module"
 }
