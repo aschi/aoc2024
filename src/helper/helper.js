@@ -22,6 +22,11 @@ export const arrayMove = (arr, oldIndex, newIndex) => {
   return arr; // for testing purposes
 };
 
+export const replaceAt = (input, index, replacement) =>
+  input.substring(0, index) +
+  replacement +
+  input.substring(index + replacement.length);
+
 export const sum = (numbers) => numbers.reduce((a, b) => a + b, 0);
 
 export const product = (numbers) => numbers.reduce((a, b) => a * b, 1);
