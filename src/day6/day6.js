@@ -1,4 +1,4 @@
-import { replaceAt, sum, readInputLines } from "../helper/helper.js";
+import { replaceAt, readInputLines } from "../helper/helper.js";
 
 const dir = [
   [-1, 0],
