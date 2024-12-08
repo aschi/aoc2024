@@ -27,6 +27,9 @@ export const replaceAt = (input, index, replacement) =>
   replacement +
   input.substring(index + replacement.length);
 
+export const isInBound = (input, c) =>
+  c[0] >= 0 && c[1] >= 0 && c[0] < input.length && c[1] < input[0].length;
+
 export const sum = (numbers) => numbers.reduce((a, b) => a + b, 0);
 
 export const product = (numbers) => numbers.reduce((a, b) => a * b, 1);
