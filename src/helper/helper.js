@@ -5,6 +5,12 @@ export const readInput = (path) =>
 
 export const readInputLines = (path) => readInput(path).split("\n");
 
+export const readInputArray = path => readInputLines(path).map(s => s.split(''))
+
+export const readInputNumberArray = path => readInputArray(path).map(arr => arr.map(Number))
+
+export const getCoordinateString = co => `y: ${co[0]}, x: ${co[1]}`
+
 export const arrayMove = (arr, oldIndex, newIndex) => {
   while (oldIndex < 0) {
     oldIndex += arr.length;
