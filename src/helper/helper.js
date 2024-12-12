@@ -18,6 +18,19 @@ export const readInputNumberArray = path => readInputArray(path).map(arr => arr.
 
 export const getCoordinateString = co => `y: ${co[0]}, x: ${co[1]}`
 
+export const filterDuplicateCoordinates = arr => {
+  const s = new Set()
+  const rv = []
+  for (let i = 0; i < arr.length; i++) {
+    const str = getCoordinateString(arr[i])
+    if (!s.has(str)) {
+      s.add(str)
+      rv.push(arr[i])
+    }
+  }
+  return rv
+}
+
 export const arrayMove = (arr, oldIndex, newIndex) => {
   while (oldIndex < 0) {
     oldIndex += arr.length;
