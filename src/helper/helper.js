@@ -1,5 +1,12 @@
 import fs from "fs";
 
+export const directions = [
+  [1, 0],
+  [-1, 0],
+  [0, 1],
+  [0, -1],
+];
+
 export const readInput = (path) =>
   fs.readFileSync(path, "utf8").replace(/^\s+|\s+$/g, "");
 
