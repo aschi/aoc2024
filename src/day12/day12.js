@@ -1,6 +1,7 @@
 import {
   sum,
   isInBound,
+  coordAdd,
   getCoordinateString,
   filterDuplicateCoordinates,
   directions,
@@ -13,7 +14,7 @@ const getAdjacentSameFields = (coords, processedFields, input) => {
   const returnValues = filterDuplicateCoordinates(
     coords.flatMap((co) =>
       directions
-        .map((d) => [co[0] + d[0], co[1] + d[1]])
+        .map((d) => coordAdd(co, d))
         .filter((c) => isInBound(input, c))
         .filter((c) => input[c[0]][c[1]] === value)
         .filter((c) => !processedFields.has(getCoordinateString(c)))
@@ -26,53 +27,99 @@ const getAdjacentSameFields = (coords, processedFields, input) => {
 
 const calculateCircumference = (region) => {
   const regionComp = new Set(region.map(getCoordinateString));
-
   return sum(
     region.map(
       (co) =>
         directions
-          .map((d) => [co[0] + d[0], co[1] + d[1]])
+          .map((d) => coordAdd(co, d))
           .map(getCoordinateString)
           .filter((str) => !regionComp.has(str)).length
     )
   );
 };
 
-const isNeighbour = (dir, c1, c2) => {
-  if (dir < 2) {
-    return c1[0] === c2[0] && (c1[1] + 1 === c2[1] || c1[1] - 1 === c2[1]);
-  } else {
-    return c1[1] === c2[1] && (c1[0] + 1 === c2[0] || c1[0] - 1 === c2[0]);
+const countCornersOfBlock = (regionComp, c) => {
+  let cornerCount = 0;
+
+  // outer topleft
+  if (
+    !regionComp.has(getCoordinateString(coordAdd(c, [-1, 0]))) &&
+    !regionComp.has(getCoordinateString(coordAdd(c, [0, -1])))
+  ) {
+    cornerCount++;
   }
+
+  // outer topright
+  if (
+    !regionComp.has(getCoordinateString(coordAdd(c, [-1, 0]))) &&
+    !regionComp.has(getCoordinateString(coordAdd(c, [0, 1])))
+  ) {
+    cornerCount++;
+  }
+
+  // outer bottomleft
+  if (
+    !regionComp.has(getCoordinateString(coordAdd(c, [1, 0]))) &&
+    !regionComp.has(getCoordinateString(coordAdd(c, [0, -1])))
+  ) {
+    cornerCount++;
+  }
+
+  // outer bottomright
+  if (
+    !regionComp.has(getCoordinateString(coordAdd(c, [1, 0]))) &&
+    !regionComp.has(getCoordinateString(coordAdd(c, [0, 1])))
+  ) {
+    cornerCount++;
+  }
+
+  // inner topleft
+  if (
+    regionComp.has(getCoordinateString(coordAdd(c, [-1, 0]))) &&
+    regionComp.has(getCoordinateString(coordAdd(c, [0, -1]))) &&
+    !regionComp.has(getCoordinateString(coordAdd(c, [-1, -1])))
+  ) {
+    cornerCount++;
+  }
+
+  // inner topright
+  if (
+    regionComp.has(getCoordinateString(coordAdd(c, [-1, 0]))) &&
+    regionComp.has(getCoordinateString(coordAdd(c, [0, 1]))) &&
+    !regionComp.has(getCoordinateString(coordAdd(c, [-1, 1])))
+  ) {
+    cornerCount++;
+  }
+
+  // inner bottomleft
+  if (
+    regionComp.has(getCoordinateString(coordAdd(c, [1, 0]))) &&
+    regionComp.has(getCoordinateString(coordAdd(c, [0, -1]))) &&
+    !regionComp.has(getCoordinateString(coordAdd(c, [1, -1])))
+  ) {
+    cornerCount++;
+  }
+
+  // inner bottomright
+  if (
+    regionComp.has(getCoordinateString(coordAdd(c, [1, 0]))) &&
+    regionComp.has(getCoordinateString(coordAdd(c, [0, 1]))) &&
+    !regionComp.has(getCoordinateString(coordAdd(c, [1, 1])))
+  ) {
+    cornerCount++;
+  }
+
+  return cornerCount;
 };
 
-const attachesToSide = (sides, direction, c1) => {
-  const relevant = sides
-    .filter((s) => s.dir === direction)
-    .filter((s) => s.fencePieces.some((c2) => isNeighbour(s.dir, c1, c2)));
-  if (relevant.length > 0) {
-    relevant[0].fencePieces.push(c1);
-    return true;
-  }
-  return false;
-};
-
-const calculateCircumferenceWithSides = (region) => {
-  const sides = [];
+const countCorners = (region) => {
   const regionComp = new Set(region.map(getCoordinateString));
 
-  return sum(
-    region.map((co) => {
-      const fences = directions
-        .map((d, dIndex) => [dIndex, [co[0] + d[0], co[1] + d[1]]])
-        .map((arr) => [arr[0], arr[1], getCoordinateString(arr[1])])
-        .filter((arr) => !regionComp.has(arr[2]))
-        .filter((arr) => !attachesToSide(sides, arr[0], arr[1]));
-
-      fences.forEach((f) => sides.push({ dir: f[0], fencePieces: [f[1]] }));
-      return fences.length;
-    })
+  const returnValue = sum(
+    region.map((c) => countCornersOfBlock(regionComp, c))
   );
+  //console.log(region, returnValue);
+  return returnValue;
 };
 
 const getRegions = (input) => {
@@ -110,8 +157,4 @@ console.log(
   `Part 1: ${sum(regions.map((r) => calculateCircumference(r) * r.length))}`
 );
 
-console.log(
-  `Part 2: ${sum(
-    regions.map((r) => calculateCircumferenceWithSides(r) * r.length)
-  )}`
-);
+console.log(`Part 2: ${sum(regions.map((r) => countCorners(r) * r.length))}`);

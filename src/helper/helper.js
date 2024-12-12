@@ -12,24 +12,28 @@ export const readInput = (path) =>
 
 export const readInputLines = (path) => readInput(path).split("\n");
 
-export const readInputArray = path => readInputLines(path).map(s => s.split(''))
+export const readInputArray = (path) =>
+  readInputLines(path).map((s) => s.split(""));
 
-export const readInputNumberArray = path => readInputArray(path).map(arr => arr.map(Number))
+export const readInputNumberArray = (path) =>
+  readInputArray(path).map((arr) => arr.map(Number));
 
-export const getCoordinateString = co => `y: ${co[0]}, x: ${co[1]}`
+export const getCoordinateString = (co) => `y: ${co[0]}, x: ${co[1]}`;
 
-export const filterDuplicateCoordinates = arr => {
-  const s = new Set()
-  const rv = []
+export const filterDuplicateCoordinates = (arr) => {
+  const s = new Set();
+  const rv = [];
   for (let i = 0; i < arr.length; i++) {
-    const str = getCoordinateString(arr[i])
+    const str = getCoordinateString(arr[i]);
     if (!s.has(str)) {
-      s.add(str)
-      rv.push(arr[i])
+      s.add(str);
+      rv.push(arr[i]);
     }
   }
-  return rv
-}
+  return rv;
+};
+
+export const coordAdd = (c1, c2) => [c1[0] + c2[0], c1[1] + c2[1]];
 
 export const arrayMove = (arr, oldIndex, newIndex) => {
   while (oldIndex < 0) {
