@@ -60,6 +60,9 @@ export const replaceAt = (input, index, replacement) =>
 export const isInBound = (input, c) =>
   c[0] >= 0 && c[1] >= 0 && c[0] < input.length && c[1] < input[0].length;
 
+export const getNumbers = (line) =>
+  [...line.matchAll(/(-?\d+)/g)].flatMap((m) => m[0]).map(Number);
+
 export const sum = (numbers) => numbers.reduce((a, b) => a + b, 0);
 
 export const product = (numbers) => numbers.reduce((a, b) => a * b, 1);

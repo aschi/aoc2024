@@ -1,7 +1,4 @@
-import { sum, readInput } from "../helper/helper.js";
-
-const getNumbers = (line) =>
-  [...line.matchAll(/(\d+)/g)].flatMap((m) => m[0]).map(Number);
+import { getNumbers, readInput, sum } from "../helper/helper.js";
 
 const parseMachine = (machine) => {
   const lines = machine.trim().split("\n");
